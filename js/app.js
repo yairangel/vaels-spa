@@ -1,62 +1,69 @@
 
+const API_URL = 'https://vaels-spa-api.yairangelfelix.workers.dev/';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbzNl2Y6VOeQdxhspp2_6x52IJx9tpPpENGeCuP34aBKdJZtUBFUI1_ivo7S2fVoUfrtMg/exec';
-
-function loadServices() {
+async function loadServices() {
     const container = document.getElementById('services-container');
 
-    const callbackName = 'vaelsServicesCallback';
+    if (!container) {
+        console.error('No se encontró services-container');
+        return;
+    }
 
-    window[callbackName] = function (response) {
-        delete window[callbackName];
+    container.innerHTML = '<p>Cargando nuestros tratamientos...</p>';
 
-        if (!response.success || !response.services) {
-            container.innerHTML = '<p>No fue posible cargar los servicios.</p>';
-            return;
+    try {
+        const response = await fetch(
+            `${API_URL}?action=services`,
+            { method: 'GET' }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
         }
 
-        renderServices(response.services);
-    };
+        const data = await response.json();
 
-    const script = document.createElement('script');
+        if (!data.success || !Array.isArray(data.services)) {
+            throw new Error('La respuesta del servidor no es válida');
+        }
 
-    script.src = API_URL +
-        '?action=services&callback=' + callbackName;
+        renderServices(data.services);
 
-    script.onerror = function () {
-        container.innerHTML =
-            '<p>No fue posible conectar con VAELS SPA. Intenta más tarde.</p>';
+    } catch (error) {
+        console.error('Error al cargar servicios:', error);
 
-        delete window[callbackName];
-        script.remove();
-    };
-
-    document.body.appendChild(script);
+        container.innerHTML = `
+            <p>No fue posible cargar los servicios.
+            Intenta nuevamente más tarde.</p>
+        `;
+    }
 }
 
 function renderServices(services) {
     const container = document.getElementById('services-container');
 
     if (services.length === 0) {
-        container.innerHTML = '<p>Próximamente tendremos nuevos tratamientos.</p>';
+        container.innerHTML =
+            '<p>Próximamente tendremos nuevos tratamientos.</p>';
         return;
     }
 
     container.innerHTML = services.map(service => `
         <article class="service-card">
-
             <div class="service-image">
                 <span>${escapeHTML(service.categoria)}</span>
             </div>
 
             <div class="service-content">
-
                 <h3>${escapeHTML(service.nombre)}</h3>
 
                 <p>${escapeHTML(service.descripcion)}</p>
 
                 <div class="service-details">
-                    <strong>$${Number(service.precio).toLocaleString('es-MX')} MXN</strong>
+                    <strong>
+                        $${Number(service.precio).toLocaleString('es-MX')} MXN
+                    </strong>
+
                     <span>${Number(service.duracion)} minutos</span>
                 </div>
 
@@ -65,9 +72,7 @@ function renderServices(services) {
                    data-service-id="${escapeHTML(service.id)}">
                     Reservar este servicio
                 </a>
-
             </div>
-
         </article>
     `).join('');
 }
