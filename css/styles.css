@@ -267,3 +267,21 @@ footer {
     }
 
 }
+
+.service-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    color: #897763;
+    font-size: 14px;
+}
+
+.service-details strong {
+    font-size: 17px;
+}
+
+.service-details span {
+    color: #827466;
+}
