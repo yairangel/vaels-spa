@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,51 +9,191 @@
     <title>VAELS SPA | Bienestar y relajación</title>
 
     <meta name="description"
-          content="Descubre los tratamientos de VAELS SPA y reserva tu cita.">
+          content="Conoce los tratamientos de VAELS SPA y reserva tu momento de bienestar.">
 
     <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
-<header>
-    <h1>VAELS SPA</h1>
-    <p>Un espacio para reconectar contigo.</p>
-</header>
+    <!-- ENCABEZADO -->
+    <header>
+        <h1>VAELS SPA</h1>
+        <p>Un espacio para reconectar contigo.</p>
+    </header>
 
-<main>
-    <h2>Bienvenido a VAELS SPA</h2>
-    
-    <p>
-        Descubre nuestros tratamientos y disfruta
-        una experiencia de bienestar y relajación.
-    </p>
+    <!-- PORTADA -->
+    <main id="inicio">
+        <h2>Bienvenido a VAELS SPA</h2>
 
-    <div class="hero-buttons">
+        <p>
+            Regálate un momento de bienestar.
+            Descubre nuestros tratamientos y disfruta
+            una experiencia de relajación.
+        </p>
 
-    <a href="#servicios" class="btn-primary">
-        Ver servicios
-    </a>
+        <div class="hero-buttons">
+            <a href="#servicios" class="btn-primary">
+                Ver servicios
+            </a>
 
-    <a href="#reservar" class="btn-secondary">
-        Reservar cita
-    </a>
+            <a href="#reservar" class="btn-secondary">
+                Reservar cita
+            </a>
+        </div>
+    </main>
+
+    <!-- SERVICIOS -->
+    <section id="servicios">
+
+        <h2>Nuestros servicios</h2>
+
+        <p class="section-description">
+            Encuentra el tratamiento ideal para ti.
+        </p>
+
+        <div class="services-container">
+
+            <!-- SERVICIO 1 -->
+            <article class="service-card">
+
+                <div class="service-image massage-image">
+                    <span>Masajes</span>
+                </div>
+
+                <div class="service-content">
+                    <h3>Masajes relajantes</h3>
+
+                    <p>
+                        Un espacio para liberar tensiones,
+                        relajarte y disfrutar un momento para ti.
+                    </p>
+
+                    <a href="#reservar"
+                       class="service-button"
+                       data-service="Masajes relajantes">
+                        Reservar este servicio
+                    </a>
+                </div>
+
+            </article>
+
+            <!-- SERVICIO 2 -->
+            <article class="service-card">
+
+                <div class="service-image facial-image">
+                    <span>Faciales</span>
+                </div>
+
+                <div class="service-content">
+                    <h3>Tratamientos faciales</h3>
+
+                    <p>
+                        Dedica tiempo al cuidado de tu piel
+                        con nuestros tratamientos faciales.
+                    </p>
+
+                    <a href="#reservar"
+                       class="service-button"
+                       data-service="Tratamientos faciales">
+                        Reservar este servicio
+                    </a>
+                </div>
+
+            </article>
+
+            <!-- SERVICIO 3 -->
+            <article class="service-card">
+
+                <div class="service-image therapeutic-image">
+                    <span>Bienestar</span>
+                </div>
+
+                <div class="service-content">
+                    <h3>Masajes terapéuticos</h3>
+
+                    <p>
+                        Disfruta una experiencia enfocada
+                        en tu bienestar y relajación corporal.
+                    </p>
+
+                    <a href="#reservar"
+                       class="service-button"
+                       data-service="Masajes terapéuticos">
+                        Reservar este servicio
+                    </a>
+                </div>
+
+            </article>
+
+            <!-- SERVICIO 4 -->
+            <article class="service-card">
+
+                <div class="service-image other-image">
+                    <span>Experiencias</span>
+                </div>
+
+                <div class="service-content">
+                    <h3>Otros tratamientos</h3>
+
+                    <p>
+                        Conoce otras experiencias y servicios
+                        disponibles en VAELS SPA.
+                    </p>
+
+                    <a href="#reservar"
+                       class="service-button"
+                       data-service="Otros tratamientos">
+                        Reservar este servicio
+                    </a>
+                </div>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- RESERVACIONES -->
+    <section id="reservar">
+
+        <h2>Reserva tu cita</h2>
+
+        <p>
+            Elige tu tratamiento y encuentra el horario
+            ideal para disfrutar tu experiencia.
+        </p>
+
+        <p class="coming-soon">
+            Próximamente podrás reservar directamente desde aquí.
+        </p>
+
+    </section>
+
+    <!-- REDES SOCIALES -->
+    <div class="social-links">
+
+        <a href="https://wa.me/526674989298"
+           target="_blank"
+           rel="noopener noreferrer">
+            WhatsApp
+        </a>
+
+        <a href="https://www.instagram.com/vaels_spa/"
+           target="_blank"
+           rel="noopener noreferrer">
+            Instagram
+        </a>
 
     </div>
-</main>
 
-<section id="servicios">
-    <h2>Nuestros servicios</h2>
-    <p>Conoce nuestras experiencias de bienestar.</p>
-
-    <!-- Aquí agregaremos el catálogo -->
-</section>
-
-<section id="reservar">
-    <h2>Reserva tu cita</h2>
-
-    <!-- Aquí construiremos el formulario -->
-</section>
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        <p>© VAELS SPA · Todos los derechos reservados</p>
+    </footer>
 
     <script src="js/app.js"></script>
+
 </body>
 </html>
+
