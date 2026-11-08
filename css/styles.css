@@ -285,3 +285,65 @@ footer {
 .service-details span {
     color: #827466;
 }
+#bookingForm {
+    max-width: 550px;
+    margin: 30px auto;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+#availableSlots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.slot-button {
+    padding: 10px 16px;
+    border: 1px solid #b99b72;
+    background: white;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.slot-button.selected {
+    background: #b99b72;
+    color: white;
+}
+
+#bookingSubmit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 6px;
+    background: #b99b72;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#bookingMessage {
+    margin-top: 15px;
+}
