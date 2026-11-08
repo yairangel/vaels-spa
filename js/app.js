@@ -9,8 +9,8 @@ let selectedTime = null;
 // =====================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadServices();
     initializeBookingForm();
+    loadServices();
 });
 
 // =====================================
@@ -20,14 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadServices() {
     const container = document.getElementById('services-container');
 
-    if (!container) {
-        console.error('No se encontró services-container');
-        return;
-    }
-
-    container.innerHTML = '<p>Cargando nuestros tratamientos...</p>';
-
     try {
+        if (container) {
+            container.innerHTML = '<p>Cargando nuestros tratamientos...</p>';
+        }
+
         const response = await fetch(`${API_URL}?action=services`);
 
         if (!response.ok) {
@@ -42,17 +39,67 @@ async function loadServices() {
 
         services = data.services;
 
-        renderServices(services);
+        // Primero cargar el selector del formulario
         populateServiceSelect(services);
+
+        // Después mostrar las tarjetas
+        renderServices(services);
+
+        console.log('Servicios cargados correctamente:', services);
 
     } catch (error) {
         console.error('Error al cargar servicios:', error);
 
-        container.innerHTML = `
-            <p>No fue posible cargar los servicios.
-            Intenta nuevamente más tarde.</p>
-        `;
+        if (container) {
+            container.innerHTML = `
+                <p>No fue posible cargar los servicios.
+                Intenta nuevamente más tarde.</p>
+            `;
+        }
+
+        const select = document.getElementById('bookingService');
+
+        if (select) {
+            select.innerHTML = '<option value="">No fue posible cargar los tratamientos</option>';
+        }
     }
+}
+
+// =====================================
+// LLENAR SELECTOR DE TRATAMIENTOS
+// =====================================
+
+function populateServiceSelect(services) {
+    const select = document.getElementById('bookingService');
+
+    if (!select) {
+        console.error('No se encontró el elemento bookingService');
+        return;
+    }
+
+    select.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Selecciona un tratamiento';
+
+    select.appendChild(defaultOption);
+
+    services.forEach(service => {
+        const option = document.createElement('option');
+
+        option.value = String(service.id);
+
+        option.textContent =
+            `${service.nombre} - $${Number(service.precio).toLocaleString('es-MX')} MXN`;
+
+        select.appendChild(option);
+    });
+
+    console.log(
+        'Tratamientos agregados al selector:',
+        select.options.length - 1
+    );
 }
 
 // =====================================
@@ -62,7 +109,10 @@ async function loadServices() {
 function renderServices(services) {
     const container = document.getElementById('services-container');
 
-    if (!container) return;
+    if (!container) {
+        console.error('No se encontró services-container');
+        return;
+    }
 
     if (services.length === 0) {
         container.innerHTML =
@@ -98,40 +148,21 @@ function renderServices(services) {
         </article>
     `).join('');
 
-    // Seleccionar automáticamente el servicio de la tarjeta
+    // Seleccionar automáticamente el tratamiento de la tarjeta
     container.querySelectorAll('[data-service-id]').forEach(button => {
         button.addEventListener('click', () => {
             const select = document.getElementById('bookingService');
 
-            if (select) {
-                select.value = button.dataset.serviceId;
-                selectedTime = null;
-                document.getElementById('bookingTime').value = '';
+            if (!select) return;
 
-                loadAvailability();
-            }
+            select.value = button.dataset.serviceId;
+
+            selectedTime = null;
+            document.getElementById('bookingTime').value = '';
+
+            loadAvailability();
         });
     });
-}
-
-// =====================================
-// LLENAR SELECTOR DE SERVICIOS
-// =====================================
-
-function populateServiceSelect(services) {
-    const select = document.getElementById('bookingService');
-
-    if (!select) return;
-
-    select.innerHTML = `
-        <option value="">Selecciona un tratamiento</option>
-        ${services.map(service => `
-            <option value="${escapeHTML(service.id)}">
-                ${escapeHTML(service.nombre)} -
-                $${Number(service.precio).toLocaleString('es-MX')} MXN
-            </option>
-        `).join('')}
-    `;
 }
 
 // =====================================
@@ -143,9 +174,12 @@ function initializeBookingForm() {
     const serviceSelect = document.getElementById('bookingService');
     const form = document.getElementById('bookingForm');
 
-    if (!dateInput || !serviceSelect || !form) return;
+    if (!dateInput || !serviceSelect || !form) {
+        console.error('No se encontraron todos los elementos del formulario');
+        return;
+    }
 
-    // Fecha mínima: hoy, en horario de Mazatlán
+    // Fecha mínima: hoy en horario de Mazatlán
     const today = new Intl.DateTimeFormat('en-CA', {
         timeZone: 'America/Mazatlan'
     }).format(new Date());
@@ -175,8 +209,6 @@ async function loadAvailability() {
     const serviceId = document.getElementById('bookingService').value;
     const date = document.getElementById('bookingDate').value;
     const container = document.getElementById('availableSlots');
-
-    if (!container) return;
 
     if (!serviceId || !date) {
         container.innerHTML =
@@ -210,22 +242,19 @@ async function loadAvailability() {
     } catch (error) {
         console.error('Error al consultar horarios:', error);
 
-        container.innerHTML = `
-            <p>No fue posible consultar los horarios.
-            Intenta nuevamente.</p>
-        `;
+        container.innerHTML =
+            '<p>No fue posible consultar los horarios. Intenta nuevamente.</p>';
     }
 }
 
 // =====================================
-// MOSTRAR HORARIOS
+// MOSTRAR HORARIOS DISPONIBLES
 // =====================================
 
 function renderAvailability(data) {
     const container = document.getElementById('availableSlots');
 
-    // Acepta las propiedades habituales de la respuesta del backend.
-    const slots = data.slots || data.horarios || [];
+    const slots = data.slots || [];
 
     if (!Array.isArray(slots) || slots.length === 0) {
         container.innerHTML =
@@ -233,14 +262,9 @@ function renderAvailability(data) {
         return;
     }
 
-    const availableSlots = slots.filter(slot => {
-        if (typeof slot === 'string') return true;
-
-        return slot.available !== false &&
-               slot.disponible !== false &&
-               slot.available !== 0 &&
-               slot.disponible !== 0;
-    });
+    const availableSlots = slots.filter(slot =>
+        typeof slot === 'string' || slot.available === true
+    );
 
     if (availableSlots.length === 0) {
         container.innerHTML =
@@ -249,11 +273,7 @@ function renderAvailability(data) {
     }
 
     container.innerHTML = availableSlots.map(slot => {
-        const time = typeof slot === 'string'
-            ? slot
-            : (slot.time || slot.hora || slot.hora_inicio);
-
-        if (!time) return '';
+        const time = typeof slot === 'string' ? slot : slot.time;
 
         return `
             <button type="button"
@@ -272,13 +292,14 @@ function renderAvailability(data) {
             button.classList.add('selected');
 
             selectedTime = button.dataset.time;
+
             document.getElementById('bookingTime').value = selectedTime;
         });
     });
 }
 
 // =====================================
-// ENVIAR RESERVACIÓN
+// REGISTRAR RESERVACIÓN
 // =====================================
 
 async function submitBooking(event) {
@@ -336,7 +357,9 @@ async function submitBooking(event) {
         const data = await response.json();
 
         if (!data.success) {
-            throw new Error(data.message || 'No se pudo registrar la reservación');
+            throw new Error(
+                data.message || 'No se pudo registrar la reservación'
+            );
         }
 
         message.textContent =
@@ -344,16 +367,18 @@ async function submitBooking(event) {
 
         const whatsappNumber = '526674989298';
 
-        const whatsappMessage =
-            `Hola, quiero confirmar mi reservación en VAELS SPA.%0A%0A` +
-            `Nombre: ${encodeURIComponent(name)}%0A` +
-            `Tratamiento: ${encodeURIComponent(service.nombre)}%0A` +
-            `Fecha: ${encodeURIComponent(date)}%0A` +
-            `Hora: ${encodeURIComponent(selectedTime)}%0A` +
-            `Teléfono: ${encodeURIComponent(phone)}`;
+        const whatsappMessage = [
+            'Hola, quiero confirmar mi reservación en VAELS SPA.',
+            '',
+            `Nombre: ${name}`,
+            `Tratamiento: ${service.nombre}`,
+            `Fecha: ${date}`,
+            `Hora: ${selectedTime}`,
+            `Teléfono: ${phone}`
+        ].join('\n');
 
         window.open(
-            `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`,
+            `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
             '_blank'
         );
 
@@ -378,7 +403,7 @@ async function submitBooking(event) {
 }
 
 // =====================================
-// SEGURIDAD: ESCAPAR HTML
+// ESCAPAR HTML
 // =====================================
 
 function escapeHTML(value) {
