@@ -45,33 +45,95 @@
 
     <!-- SERVICIOS -->
     <section id="servicios">
+    
+        <h2>Nuestros servicios</h2>
+    
+        <p class="section-description">
+            Encuentra el tratamiento ideal para ti.
+        </p>
+    
+        <div id="services-container" class="services-container">
+            <p>Cargando nuestros tratamientos...</p>
+        </div>
 
-    <h2>Nuestros servicios</h2>
-
-    <p class="section-description">
-        Encuentra el tratamiento ideal para ti.
-    </p>
-
-    <div id="services-container" class="services-container">
-        <p>Cargando nuestros tratamientos...</p>
-    </div>
-
-</section>
+    </section>
 
     <!-- RESERVACIONES -->
     <section id="reservar">
-
+    
         <h2>Reserva tu cita</h2>
-
+    
         <p>
             Elige tu tratamiento y encuentra el horario
             ideal para disfrutar tu experiencia.
         </p>
-
-        <p class="coming-soon">
-            Próximamente podrás reservar directamente desde aquí.
-        </p>
-
+    
+        <form id="bookingForm">
+    
+            <div class="form-group">
+                <label for="bookingService">Tratamiento</label>
+                <select id="bookingService" required>
+                    <option value="">Selecciona un tratamiento</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label for="bookingDate">Fecha de tu cita</label>
+                <input
+                    type="date"
+                    id="bookingDate"
+                    required
+                >
+            </div>
+    
+            <div class="form-group">
+                <label>Horarios disponibles</label>
+                <div id="availableSlots">
+                    <p>Selecciona primero un tratamiento y una fecha.</p>
+                </div>
+            </div>
+    
+            <input type="hidden" id="bookingTime">
+    
+            <div class="form-group">
+                <label for="bookingName">Nombre completo</label>
+                <input
+                    type="text"
+                    id="bookingName"
+                    placeholder="Tu nombre"
+                    required
+                    maxlength="100"
+                >
+            </div>
+    
+            <div class="form-group">
+                <label for="bookingPhone">Teléfono / WhatsApp</label>
+                <input
+                    type="tel"
+                    id="bookingPhone"
+                    placeholder="667 000 0000"
+                    required
+                    maxlength="15"
+                >
+            </div>
+    
+            <div class="form-group">
+                <label for="bookingNotes">Comentarios (opcional)</label>
+                <textarea
+                    id="bookingNotes"
+                    placeholder="¿Hay algo que debamos saber?"
+                    rows="3"
+                ></textarea>
+            </div>
+    
+            <button type="submit" id="bookingSubmit">
+                Solicitar reservación
+            </button>
+    
+            <div id="bookingMessage" role="status"></div>
+    
+        </form>
+    
     </section>
 
     <!-- REDES SOCIALES -->
